@@ -34,27 +34,32 @@ export default {
     },
     data(){
         return{
-            users:[],
+            users:null,
         }
     },
     created(){
         axios.get('https://jsonplaceholder.typicode.com/users')
             .then((res) => this.users = res.data)
         /// using event bus to tranfer data with non-relative component
-        eventBus.$on('removeUser', (id) => {
-            this.users = this.users.filter(user => user.id !== id)
-            console.log(this.users);
-        }),
+        eventBus.$on('removeUser', this.deleteUser),
         //using event bus to update data from api
         eventBus.$on('updatedUser' , (data) => {
             const index = this.users.findIndex(user => user.id === data.id)
             if(index !== -1){
-                console.log(data)
                 this.users.splice(index, 1, data);
+                console.log(this.users)
             }
         })
     },
-    methods:{
+    methods:{  
+        //remove user
+        deleteUser(id){
+            axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+                .then(() =>{
+                    this.users = this.users.filter(user => user.id !== id)
+                    console.log(this.users)
+                })
+        },
         //search post by using emit
         filterUser(id){
             this.axios.get(`https://jsonplaceholder.typicode.com/users/${id}`).then(() => {
@@ -68,13 +73,14 @@ export default {
                 this.filterUser(e.target.value)
             }
         },
+        //update users list 
         updatedUser(data){
             const index = this.users.findIndex(user => user.id === data.id)
             if(index !== -1){
                 console.log(data)
                 this.users.splice(index, 1, data);
             }
-        }
+        },
     },
 }
 </script>

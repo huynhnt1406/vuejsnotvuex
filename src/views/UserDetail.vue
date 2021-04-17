@@ -65,6 +65,7 @@ export default {
     methods:{
         deleteUser(id){
             eventBus.$emit('removeUser', id)
+            console.log(id)
             this.$router.push({path:'/users'})
         },
         updateUser(user){
