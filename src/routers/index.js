@@ -16,6 +16,14 @@ const routes = [
         path:'/users',
         name:'Users',
         component:Users,
+        beforeRouteEnter: (to, from, next) =>{ 
+            const loggedIn = true
+            if(loggedIn){
+                next()
+            }else{
+                next('/login')
+            }
+        }
     },
     {
         path:'/posts',

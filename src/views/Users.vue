@@ -15,6 +15,16 @@ export default {
     components:{
         AllUsers,
     },
+    beforeRouteEnter(to, from ,next){
+        const uname = localStorage.getItem('username')
+        const pname = localStorage.getItem('password')
+        console.log(pname,uname);
+        if(uname !== null || pname !== null){
+            next()
+        }else{
+            next('/login')
+        }
+    }
 }
 </script>
 
