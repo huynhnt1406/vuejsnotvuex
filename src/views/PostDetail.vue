@@ -1,20 +1,20 @@
 <template>
    <div class="formcontainer">
        <div class="postid">
-           <h3>Post {{post.id}}</h3>
+           <h3>Post {{data.id}}</h3>
        </div>
        <div class="formpost">
             <div class="child">
                 <label for="">Title</label>
-                <input type="text" v-model="post.title">
+                <input type="text" v-model="data.title">
             </div>
             <div class="child">
                 <label for="">Body</label>
-                <textarea type="text" v-model="post.body"></textarea>
+                <textarea type="text" v-model="data.body"></textarea>
             </div>
             <div class="buttonpost">
-                <button  >Update</button>
-                <button   >Delete</button>
+                <button @click="updatePost(data)" >Update</button>
+                <button @click="deletePost(data.id)"   >Delete</button>
             </div>
        </div>
    </div>
@@ -24,13 +24,14 @@
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
+import {eventBus} from '../main'
 Vue.use(VueAxios,axios)
 export default {
     name:"PostDetail",
     props:['id'],
     data(){
         return{
-            post:{
+            data:{
                 id:'',
                 title : '',
                 body : ''
@@ -40,9 +41,19 @@ export default {
     methods:{
         getPostData(){
             this.axios(`https://jsonplaceholder.typicode.com/posts/${this.id}`).then((res) =>{
-                this.post = res.data
+                this.data = res.data
                 console.log(res.data)
             })
+        },
+        deletePost(id){
+            eventBus.$emit('removePost', id)
+            console.log(id);
+            this.$router.push({path:'/posts'})
+        },
+        updatePost(data){
+            eventBus.$emit('updatePost',data)
+            console.log(data)
+            this.$router.push({path:'/posts'})
         }
     },
     mounted(){
