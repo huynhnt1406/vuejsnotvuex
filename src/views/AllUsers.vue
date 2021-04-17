@@ -2,7 +2,7 @@
     <div class="users" >
         <UserSearch @filterUser = 'searchUser'/>
         <div class="user-display">
-            <div v-for="user in users" :key="user.id" class="user-ele">
+            <div v-for="user in this.users" :key="user.id" class="user-ele">
                 <div class="user-left">
                     <div class="user-avt">
                         <img src="https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png" alt="useravt">
@@ -25,6 +25,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import UserSearch from '../views/UserSearch'
+import {eventBus} from '../main'
 Vue.use(VueAxios,axios)
 export default {
     name:'AllUser',
@@ -33,25 +34,31 @@ export default {
     },
     data(){
         return{
-            users:null,
+            users:[],
         }
     },
-
+    created(){
+        axios.get('https://jsonplaceholder.typicode.com/users')
+            .then((res) => this.users = res.data)
+        /// using event bus to tranfer data with non-relative component
+        eventBus.$on('removeUser', (id) => {
+            this.users = this.users.filter(user => user.id !== id)
+            console.log(this.users);
+        }),
+        //using event bus to update data from api
+        eventBus.$on('updatedUser' , (data) => {
+            const index = this.users.findIndex(user => user.id === data.id)
+            if(index !== -1){
+                console.log(data)
+                this.users.splice(index, 1, data);
+            }
+        })
+    },
     methods:{
-        getData(){
-            this.axios.get('https://jsonplaceholder.typicode.com/users').then((result) =>{
-                console.warn(result)
-                this.users = result.data
-            })
-        },
+        //search post by using emit
         filterUser(id){
             this.axios.get(`https://jsonplaceholder.typicode.com/users/${id}`).then(() => {
                 this.users = this.users.filter(user => user.id == id)
-            })
-        },
-        removeUser(id){
-            this.axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`).then(() => {
-                this.users = this.users.filter(user => user.id !== id)
             })
         },
         searchUser(e){
@@ -60,11 +67,15 @@ export default {
             }else{
                 this.filterUser(e.target.value)
             }
+        },
+        updatedUser(data){
+            const index = this.users.findIndex(user => user.id === data.id)
+            if(index !== -1){
+                console.log(data)
+                this.users.splice(index, 1, data);
+            }
         }
     },
-    mounted(){
-        this.getData()
-    }
 }
 </script>
 

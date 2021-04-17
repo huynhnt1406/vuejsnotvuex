@@ -5,15 +5,15 @@
             <h3>nthuynh</h3>
       </div>
       <div class="sidebar-link">
-            <router-link class="link" to='/users'>Users</router-link>
-            <router-link class="link" to='/posts'>Posts</router-link>
+            <router-link   class="link" to='/users'>Users</router-link>
+            <router-link  class="link" to='/posts'>Posts</router-link>
       </div>
   </div>
 </template>
 
 <script>
 export default {
-
+   
 }
 </script>
 

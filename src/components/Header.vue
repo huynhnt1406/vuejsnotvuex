@@ -4,7 +4,7 @@
           <h3>Vue Project</h3>
       </div>
       <div class="header-right">
-          <button>Login</button>
+          <router-link to="/login">Login</router-link>
       </div>
   </div>
 </template>

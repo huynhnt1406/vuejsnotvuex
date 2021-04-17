@@ -6,27 +6,27 @@
        <div class="formuser">
             <div class="child">
                 <label for="">Full name</label>
-                <input type="text" v-model="user.name">
+                <input type="text" v-model.lazy="user.name">
             </div>
             <div class="child">
                 <label for="">User name</label>
-                <input type="text" v-model="user.username">
+                <input type="text" v-model.lazy="user.username">
             </div>
             <div class="child">
                 <label for="">Email</label>
-                <input type="text" v-model="user.email">
+                <input type="text" v-model.lazy="user.email">
             </div>
             <div class="child">  
                 <label for="">Street</label>
-                <input type="text" v-model="user.address.street">
+                <input type="text" v-model.lazy="user.address.street">
             </div>
             <div class="child">
                 <label for="">City</label>
-                <input type="text" v-model="user.address.city">
+                <input type="text" v-model.lazy="user.address.city">
             </div>
             <div class="buttonuser">
-                <button >Update</button>
-                <button >Delete</button>
+                <button  @click="updateUser(user)" >Update</button>
+                <button @click="deleteUser(user.id)" >Delete</button>
             </div>
        </div>
    </div>
@@ -36,7 +36,7 @@
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import axios from 'axios'
-
+import {eventBus} from '../main'
 Vue.use(VueAxios,axios)
 export default {
     name:"UserDetail",
@@ -57,16 +57,22 @@ export default {
             }
         }
     },
+    created(){
+            axios.get(`https://jsonplaceholder.typicode.com/users/${this.id}`).then((res) => {
+            this.user = res.data
+        })
+    },
     methods:{
-        getUserData(){
-            this.axios(`https://jsonplaceholder.typicode.com/users/${this.id}`).then((res) => {
-                this.user = res.data
-            })
+        deleteUser(id){
+            eventBus.$emit('removeUser', id)
+            this.$router.push({path:'/users'})
+        },
+        updateUser(user){
+            eventBus.$emit('updatedUser', user)
+            console.log(user)
+            this.$router.push({path:'/users'})
         },
     },
-    mounted(){
-        this.getUserData()
-    }
 }
 </script>
 

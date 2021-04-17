@@ -33,12 +33,14 @@ Vue.use(VueAxios,axios)
                 posts:null
             }
         },
+        created(){
+            this.axios.get('https://jsonplaceholder.typicode.com/posts').then((res) => {
+                this.posts = res.data
+            })
+        },
         methods:{
-            getPosts(){
-                this.axios.get('https://jsonplaceholder.typicode.com/posts').then((res) => {
-                    this.posts = res.data
-                })
-            },
+
+            //search post using  emit
             filterPost(id){
                 this.axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`).then(() => {
                     this.posts = this.posts.filter(post => post.id == id)
@@ -52,9 +54,6 @@ Vue.use(VueAxios,axios)
                 }
             }
         },
-        mounted(){
-            this.getPosts()
-        }
     }
 </script>
 

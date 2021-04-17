@@ -4,17 +4,23 @@ import UserDetail from '../views/UserDetail'
 import PostDetail from '../views/PostDetail'
 import Users from '../views/Users'
 import Posts from '../views/Posts'
+import Login from '../views/Login'
 Vue.use(VueRouter);
 const routes = [
     {
+        path:'/login',
+        name:'Login',
+        component:Login,
+    },
+    {
         path:'/users',
         name:'Users',
-        component:Users
+        component:Users,
     },
     {
         path:'/posts',
         name:'Posts',
-        component:Posts
+        component:Posts,
     },
     {
         path:'/users/userdetail/:id',
