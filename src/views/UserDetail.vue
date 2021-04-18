@@ -64,12 +64,24 @@ export default {
     },
     methods:{
         deleteUser(id){
-            eventBus.$emit('removeUser', id)
-            this.$router.push({path:'/users'})
+            if(id){
+                alert("delete succesfully")
+                eventBus.$emit('removeUser', id)
+                this.$router.push({path:'/users'})
+            }else{
+                alert("delete failed")
+                this.$router.push({path:'/users'})
+            }
         },
         updateUser(data){
-            eventBus.$emit('updatedUser', data)
-            this.$router.push({path:'/users'})
+            if(data){
+                alert("update successfully")
+                eventBus.$emit('updatedUser', data)
+                this.$router.push({path:'/users'})
+            }else{
+                alert("update failed")
+                this.$router.push({path:'/users'})
+            }
         },
     },
 }

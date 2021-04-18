@@ -46,14 +46,25 @@ export default {
             })
         },
         deletePost(id){
-            eventBus.$emit('removePost', id)
-            console.log(id);
-            this.$router.push({path:'/posts'})
+            if(id){
+                alert("delete successfully")
+                eventBus.$emit('removePost', id)
+                this.$router.push({path:'/posts'})
+            }else{
+                alert("delete failed")
+                this.$router.push({path:'/posts'})
+            }
         },
         updatePost(data){
-            eventBus.$emit('updatePost',data)
-            console.log(data)
-            this.$router.push({path:'/posts'})
+            if(data){
+                alert("update successfully")
+                eventBus.$emit('updatePost',data)
+                console.log(data)
+                this.$router.push({path:'/posts'})
+            }else{
+                alert("delete failed")
+                this.$router.push({path:'/posts'})
+            }
         }
     },
     mounted(){
