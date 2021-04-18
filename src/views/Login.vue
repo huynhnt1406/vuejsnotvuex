@@ -37,7 +37,9 @@ export default {
         else{
           this.username = localStorage.setItem("username",JSON.stringify(this.username))
           this.password = localStorage.setItem("password",JSON.stringify(this.password))
-          this.$router.push('/homepage')
+          location.reload('/users')
+          location.replace('/homepage')
+          this.$router.push({path:'/homepage'})
         }
     },
   }

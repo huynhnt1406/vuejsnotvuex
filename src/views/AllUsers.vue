@@ -39,11 +39,16 @@ export default {
         }
     },
     created(){
-        this.axios.get('https://jsonplaceholder.typicode.com/users')
+        axios.get('https://jsonplaceholder.typicode.com/users')
             .then(res => this.users = res.data)
-            console.log(this.users)
     },
     methods:{ 
+        
+        getUsers(){
+            axios.get('https://jsonplaceholder.typicode.com/users')
+            .then(res => this.users = res.data)
+            
+        },
         //search post by using emit
         filterUser(id){
             this.axios.get(`https://jsonplaceholder.typicode.com/users/${id}`).then(() => {
@@ -60,16 +65,21 @@ export default {
         //update users list 
     },
     mounted(){
-        eventBus.$on('removeUser', id => {
+        this.getUsers()
+    },
+    updated(){
+        eventBus.$on('removeUser',id => {
             this.users = this.users.filter(user => user.id !== id)
-        }),
+            console.log(this.users)
+        })
         eventBus.$on('updatedUser',data => {
-            const index = this.users.findIndex(user => data.id === user.id)
+            const index = this.users.findIndex(user => user.id === data.id)
             if(index !== -1){
                 this.users.splice(index,1, data)
+                console.log(this.users)
             }
         })
-    }
+    }   
 }
 </script>
 
