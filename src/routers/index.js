@@ -21,6 +21,7 @@ const routes = [
             if(loggedIn){
                 next()
             }else{
+                alert('you have to login first')
                 next('/login')
             }
         }
@@ -29,6 +30,14 @@ const routes = [
         path:'/posts',
         name:'Posts',
         component:Posts,
+        beforeRouteEnter: (to, from, next) =>{ 
+            const loggedIn = true
+            if(loggedIn){
+                next()
+            }else{
+                next('/login')
+            }
+        }
     },
     {
         path:'/users/userdetail/:id',

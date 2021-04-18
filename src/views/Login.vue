@@ -21,6 +21,7 @@ export default {
     return{
       username:'',
       password:'',
+      useraccount : localStorage.setItem("username")
     }
   },
   methods:{

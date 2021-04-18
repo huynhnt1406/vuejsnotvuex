@@ -2,7 +2,7 @@
   <div class="sidebar">
       <div class="sidebar-header">
             <img src="https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png" alt="mainavt">
-            <h3>nthuynh</h3>
+            <h3>{{useraccount}}</h3>
       </div>
       <div class="sidebar-link">
             <router-link   class="link" to='/users'>Users</router-link>
@@ -13,7 +13,11 @@
 
 <script>
 export default {
-   
+   data(){
+       return{
+            useraccount: JSON.parse(localStorage.getItem("username")),
+       }
+   }
 }
 </script>
 

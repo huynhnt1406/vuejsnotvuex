@@ -2,7 +2,7 @@
     <div class="users" >
         <UserSearch @filterUser = 'searchUser'/>
         <div class="user-display">
-            <div v-for="user in this.users" :key="user.id" class="user-ele">
+            <div v-for="user in users" :key="user.id" class="user-ele">
                 <div class="user-left">
                     <div class="user-avt">
                         <img src="https://cdn4.iconfinder.com/data/icons/symbols-vol-1-1/40/user-person-single-id-account-player-male-female-512.png" alt="useravt">
@@ -25,7 +25,8 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import UserSearch from '../views/UserSearch'
-import {eventBus} from '../main'
+import { eventBus } from '../main'
+//import {eventBus} from '../main'
 Vue.use(VueAxios,axios)
 export default {
     name:'AllUser',
@@ -34,32 +35,15 @@ export default {
     },
     data(){
         return{
-            users:null,
+            users:[],
         }
     },
     created(){
-        axios.get('https://jsonplaceholder.typicode.com/users')
-            .then((res) => this.users = res.data)
-        /// using event bus to tranfer data with non-relative component
-        eventBus.$on('removeUser', this.deleteUser),
-        //using event bus to update data from api
-        eventBus.$on('updatedUser' , (data) => {
-            const index = this.users.findIndex(user => user.id === data.id)
-            if(index !== -1){
-                this.users.splice(index, 1, data);
-                console.log(this.users)
-            }
-        })
+        this.axios.get('https://jsonplaceholder.typicode.com/users')
+            .then(res => this.users = res.data)
+            console.log(this.users)
     },
-    methods:{  
-        //remove user
-        deleteUser(id){
-            axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
-                .then(() =>{
-                    this.users = this.users.filter(user => user.id !== id)
-                    console.log(this.users)
-                })
-        },
+    methods:{ 
         //search post by using emit
         filterUser(id){
             this.axios.get(`https://jsonplaceholder.typicode.com/users/${id}`).then(() => {
@@ -74,14 +58,18 @@ export default {
             }
         },
         //update users list 
-        updatedUser(data){
-            const index = this.users.findIndex(user => user.id === data.id)
-            if(index !== -1){
-                console.log(data)
-                this.users.splice(index, 1, data);
-            }
-        },
     },
+    mounted(){
+        eventBus.$on('removeUser', id => {
+            this.users = this.users.filter(user => user.id !== id)
+        }),
+        eventBus.$on('updatedUser',data => {
+            const index = this.users.findIndex(user => data.id === user.id)
+            if(index !== -1){
+                this.users.splice(index,1, data)
+            }
+        })
+    }
 }
 </script>
 

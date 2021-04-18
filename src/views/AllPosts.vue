@@ -31,29 +31,15 @@ Vue.use(VueAxios,axios)
         },
         data(){
             return{
-                posts:[]
+                posts:[],
             }
         },
         created(){
             this.axios.get('https://jsonplaceholder.typicode.com/posts').then((res) => {
                 this.posts = res.data
             })
-            eventBus.$on('removePost', this.removePost)
-            eventBus.$on('updatePost',this.updatePost)
         },
         methods:{
-            removePost(id){
-                this.posts = this.posts.filter(post => post.id !== id)
-                console.log(this.posts)
-            },
-            updatePost(data){
-                const index = this.posts.findIndex(post => post.id === data.id)
-                console.log(index)
-                if(index !== -1){
-                    this.posts.splice(index,1,data)
-                    console.log(this.posts)
-                }
-            },
             //search post using  emit
             filterPost(id){
                 this.axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`).then(() => {
@@ -68,6 +54,17 @@ Vue.use(VueAxios,axios)
                 }
             }
         },
+        mounted(){
+            eventBus.$on('removePost' , (id) =>{
+                this.posts = this.posts.filter(post => post.id !== id)
+            })
+            eventBus.$on('updatePost', (data) => {
+                const index = this.posts.findIndex(post => data.id === post.id)
+                if(index !== -1){
+                    this.posts.splice(index,1, data)
+                }
+            })
+        }
     }
 </script>
 

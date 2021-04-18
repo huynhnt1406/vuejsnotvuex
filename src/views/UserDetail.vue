@@ -1,32 +1,32 @@
 <template>
    <div class="formcontainer">
        <div class="userid">
-           <h3>User {{user.id}}</h3>
+           <h3>User {{data.id}}</h3>
        </div>
        <div class="formuser">
             <div class="child">
                 <label for="">Full name</label>
-                <input type="text" v-model.lazy="user.name">
+                <input type="text" v-model.lazy="data.name">
             </div>
             <div class="child">
                 <label for="">User name</label>
-                <input type="text" v-model.lazy="user.username">
+                <input type="text" v-model.lazy="data.username">
             </div>
             <div class="child">
                 <label for="">Email</label>
-                <input type="text" v-model.lazy="user.email">
+                <input type="text" v-model.lazy="data.email">
             </div>
             <div class="child">  
                 <label for="">Street</label>
-                <input type="text" v-model.lazy="user.address.street">
+                <input type="text" v-model.lazy="data.address.street">
             </div>
             <div class="child">
                 <label for="">City</label>
-                <input type="text" v-model.lazy="user.address.city">
+                <input type="text" v-model.lazy="data.address.city">
             </div>
             <div class="buttonuser">
-                <button  @click="updateUser(user)" >Update</button>
-                <button @click="deleteUser(user.id)" >Delete</button>
+                <button  @click="updateUser(data)" >Update</button>
+                <button @click="deleteUser(data.id)" >Delete</button>
             </div>
        </div>
    </div>
@@ -45,7 +45,7 @@ export default {
     },
     data(){
         return{
-            user:{
+            data:{
                 id:'',
                 name:'',
                 username:'',
@@ -59,18 +59,16 @@ export default {
     },
     created(){
             axios.get(`https://jsonplaceholder.typicode.com/users/${this.id}`).then((res) => {
-            this.user = res.data
+            this.data = res.data
         })
     },
     methods:{
         deleteUser(id){
             eventBus.$emit('removeUser', id)
-            console.log(id)
             this.$router.push({path:'/users'})
         },
-        updateUser(user){
-            eventBus.$emit('updatedUser', user)
-            console.log(user)
+        updateUser(data){
+            eventBus.$emit('updatedUser', data)
             this.$router.push({path:'/users'})
         },
     },
