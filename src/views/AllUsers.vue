@@ -41,6 +41,8 @@ export default {
     created(){
         axios.get('https://jsonplaceholder.typicode.com/users')
             .then(res => this.users = res.data)
+        eventBus.$on('removeUser',this.removeUser)
+        eventBus.$on('updatedUser',this.updateUser)
     },
     methods:{ 
         
@@ -48,6 +50,22 @@ export default {
             axios.get('https://jsonplaceholder.typicode.com/users')
             .then(res => this.users = res.data)
             
+        },
+        removeUser(id){
+            axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+            .then(this.users = this.users.filter(user => user.id !== id))
+            this.$forceUpdate()
+            console.log(this.users)
+        },
+        updateUser(data){
+            const index = this.users.findIndex(user => user.id === data.id)
+
+            if(index !== -1){
+                axios.post(`https://jsonplaceholder.typicode.com/users/${data.id}`)
+                    .then(this.user = this.users.splice(index,1,data))
+            }
+            this.$forceUpdate()
+            console.log(this.users)
         },
         //search post by using emit
         filterUser(id){
@@ -68,17 +86,6 @@ export default {
         this.getUsers()
     },
     updated(){
-        eventBus.$on('removeUser',id => {
-            this.users = this.users.filter(user => user.id !== id)
-            console.log(this.users)
-        })
-        eventBus.$on('updatedUser',data => {
-            const index = this.users.findIndex(user => user.id === data.id)
-            if(index !== -1){
-                this.users.splice(index,1, data)
-                console.log(this.users)
-            }
-        })
     }   
 }
 </script>
